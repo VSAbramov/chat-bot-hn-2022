@@ -7,7 +7,10 @@ import ast
 import pprint
 from Character import Character
 
-bot = telebot.TeleBot('5387710154:AAFPpNY1V_eO6IraDtnPZ8DvO3nP7bIjZj4')
+character = Character()
+
+bot = telebot.TeleBot('5387710154:AAFPpNY1V_eO6IraDtnPZ8DvO3nP7bIjZj4')   
+
 
 @bot.message_handler(commands = ['start'])
 def start(message):
@@ -17,8 +20,8 @@ def start(message):
         #bot.send_message(message.chat.id, 'Hello world!')
         bot.send_message(message.chat.id, mess)
 
-        if (character == None):
-            character = Character(message.from_user.id)
+        #if (not character):
+        #    character = Character(message.from_user.id)
     except:
         bot.send_message(message.chat.id, "something went wrong")
 
@@ -32,14 +35,20 @@ def info(message):
     except:
         bot.send_message(message.chat.id, "something went wrong")
 
+@bot.message_handler(commands=['lvlup'])
+def lvlup(message):
+    character.lvlup(message, give_pictue)
+
 @bot.message_handler(commands=['help'])
 def help(message):
     bot.send_message(message.chat.id, ''' 
     Список доступных комманд:
     start, 
     info, 
-    help
+    help,
+    lvlup
     ''')
+
 
 @bot.message_handler(regexp="/.*")
 def wrong_command(message):
@@ -48,10 +57,16 @@ def wrong_command(message):
     '''
     )  
 
-
 @bot.message_handler()
 def get_user_text(message):
     text = message.text
     bot.send_message(message.chat.id, message.text)
 
-bot.polling(non_stop = True)    
+
+
+def give_pictue(message, text=''):
+    photo = open('./pictures/ex.jpg', 'rb')
+    print(type(message))
+    bot.send_photo(message.chat.id, photo)
+
+bot.polling(non_stop = True) 

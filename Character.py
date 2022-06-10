@@ -1,3 +1,5 @@
+import sqlite3 as sl
+
 class Character:
     """
     This is an avatar for interaction with user.
@@ -7,10 +9,14 @@ class Character:
     dirrect command.
     """
 
-    def __init__(self, id_from_msg):
+    def __init__(self, id_from_msg=1):
         level = 0 
         id = id_from_msg
-        print('DELETE_ME')
 
-    def show_state(msg = ''):
+    def show_state(self, msg = ''):
         print("hello")
+
+    def lvlup(self, msg, send_pic, text=''):
+        #level += 1
+        send_pic(msg)
+
