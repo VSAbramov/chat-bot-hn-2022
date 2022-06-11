@@ -96,16 +96,18 @@ def get_user_text(message):
         grade = 1
         bot.send_message(message.chat.id, "БОЛЬШЕ РАБОТАЙ! (со временем я смогу давать советы получше)")
     if (character.state == EXAM_ST):
-        text, grade = text_processing.answer_estimate(message.text)    
+        msg_text = message.text
+        text = character.load_course_text()
+        text, grade = text_processing.answer_estimate(msg_text, text)    
         bot.send_message(message.chat.id, text)
         if (grade>0):
             character.send_pic(message, give_pictue)
     if (character.state == DEFAULT_ST):
         text = "Я совсем недавно родился и пока понимаю только некоторые команды. Напиши /help, чтобы увидеть список всех команд."
-        grade = 1
+        keep_interaction = False
         bot.send_message(message.chat.id, text)
 
-    if (grade >0):
+    if (grade!=0):
         character.state = DEFAULT_ST
 
 

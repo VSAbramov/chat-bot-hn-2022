@@ -1,3 +1,6 @@
+from matplotlib.pyplot import text
+
+
 class Character:
     """
     This is an avatar for interaction with user.
@@ -27,12 +30,17 @@ class Character:
     def send_pic(self, msg, bot_send_pic):
         pic = './pictures/ex.jpg'
         if (self.level == 1): pic = './pictures/1.jpg'
-        if (self.level == 2): pic = './pictures/2.jpg'
-        if (self.level == 3): pic = './pictures/3.jpg'
-        if (self.level == 4): pic = './pictures/4.jpg'
-        if (self.level == 5): pic = './pictures/5.jpg'
-        if (self.level == 6): pic = './pictures/6.jpg'
-        if (self.level == 7): pic = './pictures/7.jpg'
+        elif (self.level == 2): pic = './pictures/2.jpg'
+        elif (self.level == 3): pic = './pictures/3.jpg'
+        elif (self.level == 4): pic = './pictures/4.jpg'
+        elif (self.level == 5): pic = './pictures/5.jpg'
+        elif (self.level == 6): pic = './pictures/6.jpg'
+        elif (self.level == 7): pic = './pictures/7.jpg'
         
         bot_send_pic(msg, pic)
+
+    def load_course_text(self):
+        with open('./courses_texts/ex_1.txt', "r") as file:
+            text = file.read()
+        return text
 
