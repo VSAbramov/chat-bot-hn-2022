@@ -6,6 +6,7 @@ import json
 import ast
 import pprint
 from Character import Character
+import text_processing
 
 DEFAULT_ST = 0
 ADVISE_ST  = 1
@@ -47,11 +48,22 @@ def lvlup(message):
 @bot.message_handler(commands=['lvlup'])
 def lvlup(message):
     character.lvlup(message, give_pictue)
+    bot.send_message(message.chat.id, "Благодаря твоим стараниям я вырос и стал лучше!")
 
 @bot.message_handler(commands=['check_lvl'])
 def lvlup(message):
     #character.lvlup(message, give_pictue)
     character.show_state(message, bot.send_message)
+
+@bot.message_handler(commands=['advise'])
+def advise(message):
+    character.state = ADVISE_ST
+    bot.send_message(message.chat.id, "опишите вашу проблему")
+
+@bot.message_handler(commands=['exam'])
+def exam(message):
+    character.state = EXAM_ST
+    bot.send_message(message.chat.id, "расскажите, что вы знаете о проблеме")
 
 @bot.message_handler(commands=['help'])
 def help(message):
@@ -62,7 +74,9 @@ def help(message):
     help,
     lvlup,
     status,
-    check_lvl
+    check_lvl,
+    advise,
+    exam
     ''')
 
 
@@ -79,18 +93,24 @@ def wrong_command(message):
 @bot.message_handler()
 def get_user_text(message):
     if (character.state == ADVISE_ST):
-        pass
+        grade = 1
+        bot.send_message(message.chat.id, "БОЛЬШЕ РАБОТАЙ! (со временем я смогу давать советы получше)")
     if (character.state == EXAM_ST):
-        pass
+        text, grade = text_processing.answer_estimate(message.text)    
+        bot.send_message(message.chat.id, text)
+        if (grade>0):
+            character.send_pic(message, give_pictue)
     if (character.state == DEFAULT_ST):
-        text = "Я совсем недавно родился и пока понимаю только некоторые команды. Напиши \help, чтобы увидеть список всех команд."
+        text = "Я совсем недавно родился и пока понимаю только некоторые команды. Напиши /help, чтобы увидеть список всех команд."
+        grade = 1
         bot.send_message(message.chat.id, text)
 
-    character.state = DEFAULT_ST
+    if (grade >0):
+        character.state = DEFAULT_ST
 
 
 
-def give_pictue(message, pic,text=''):
+def give_pictue(message, pic, text=''):
     with open(pic, 'rb') as photo:
         bot.send_photo(message.chat.id, photo)
 
