@@ -1,21 +1,22 @@
 import re
 import numpy
 
+TOO_SHORT = 0
+WRONG = 1
+RIGHT = 2 
+
 MIN_ANS_LEN = 20
 
 def answer_estimate(st_ans, text):
     if (len(st_ans)<MIN_ANS_LEN):
         ex_ans = "Не скупитесь на слова, расскажите, что вы знаете, подробнее."
-        return (ex_ans, 0)
+        return (ex_ans, TOO_SHORT)
     if (estim_answer(st_ans, text)>0):
         ex_ans = "Вы меня поразили! Продолжайте заниматься в том же духе, и вы станете лучшим в своём деле!"
-        return(ex_ans, 1)
+        return(ex_ans, RIGHT)
     else:
         ex_ans = "Мне кажется, что вам стоит лучше разобрать эту тему."
-        return(ex_ans, -1)
-
-def process_text(msg_text, text):
-    pass
+        return(ex_ans, WRONG)
 
 def extract_words(text=''):
     # перевод в нижний регистр
@@ -53,7 +54,7 @@ def estim_answer(msg_text, text):
 
     key_used = words_set.intersection(keywords)
 
-    if (len(key_used)/len(keywords)>0.3):
+    if (len(key_used)/len(keywords)>0.2):
         return 1
     else:
         return 0

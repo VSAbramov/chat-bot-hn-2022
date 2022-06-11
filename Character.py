@@ -11,8 +11,6 @@ class Character:
     """
     
     level = 1
-    state = 0
-
 
     def __init__(self, id_from_msg=1):
         id = id_from_msg
@@ -21,13 +19,15 @@ class Character:
         text = str(self.level)
         send_msg(msg.chat.id, text)
 
-    def lvlup(self, msg, bot_send_pic, text=''):
+    def lvlup(self):
         self.level += 1
-        #pic = './pictures/ex.jpg'
-        #send_pic(msg, pic)
-        self.send_pic(msg, bot_send_pic)
 
-    def send_pic(self, msg, bot_send_pic):
+    def load_course_text(self):
+        with open('./courses_texts/ex_1.txt', "r") as file:
+            text = file.read()
+        return text
+
+    def give_avatar_address(self):
         pic = './pictures/ex.jpg'
         if (self.level == 1): pic = './pictures/1.jpg'
         elif (self.level == 2): pic = './pictures/2.jpg'
@@ -36,11 +36,6 @@ class Character:
         elif (self.level == 5): pic = './pictures/5.jpg'
         elif (self.level == 6): pic = './pictures/6.jpg'
         elif (self.level == 7): pic = './pictures/7.jpg'
-        
-        bot_send_pic(msg, pic)
 
-    def load_course_text(self):
-        with open('./courses_texts/ex_1.txt', "r") as file:
-            text = file.read()
-        return text
+        return pic
 
