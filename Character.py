@@ -1,5 +1,4 @@
-from matplotlib.pyplot import text
-
+import text_processing
 
 class Character:
     """
@@ -14,10 +13,6 @@ class Character:
 
     def __init__(self, id_from_msg=1):
         id = id_from_msg
-
-    def show_state(self, msg, send_msg):
-        text = str(self.level)
-        send_msg(msg.chat.id, text)
 
     def lvlup(self):
         self.level += 1
