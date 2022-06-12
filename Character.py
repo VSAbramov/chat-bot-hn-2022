@@ -65,7 +65,7 @@ class Character:
             pic = './pictures/fun.' + str(self.level) + '.' + str(pic_num) + '.jpg'
             return pic, lines[pic_num-1]
         except:
-            return './pictures/ex.jpg', 'Пингвины!'
+            return './pictures/ex.jpg', 'Пингвины! Куда это я заплыл???'
 
     def get_exercise(self, message):
         ''' 
