@@ -10,6 +10,7 @@ class Character:
     """
     
     level = 1
+    chosen_course = ''
 
     def __init__(self, id_from_msg=1):
         id = id_from_msg
@@ -18,7 +19,9 @@ class Character:
         self.level += 1
 
     def load_course_text(self):
-        with open('./courses_texts/ex_1.txt', "r") as file:
+        file_name = self.get_course_file_name()
+        #with open('./courses_texts/ex_1.txt', "r") as file:
+        with open(file_name, "r") as file:
             text = file.read()
         return text
 
@@ -34,3 +37,15 @@ class Character:
 
         return pic
 
+    def get_courses(self):
+        return ['психология', 'литература', 'python', 'data science']
+
+    def get_course_file_name(self):
+        if self.chosen_course == 'психология':
+            return './courses_texts/психология.txt'
+        elif self.chosen_course == 'литература':
+            return './courses_texts/литература.txt'
+        elif self.chosen_course == 'python':
+            return './courses_texts/python.txt'
+        elif self.chosen_course == 'data science':
+            return './courses_texts/data science.txt'

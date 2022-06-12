@@ -54,7 +54,9 @@ def check_lvl(message):
 @bot.message_handler(commands=['exam'])
 def exam(message):
     bt.bot_state = bt.EXAM_ST
-    remove_buttons(message, 'расскажите, что вы знаете о проблеме')
+    #course = ask_for_course(message)
+    #bt.bot_state = bt.DEFAULT_ST # временная затычка
+    remove_buttons(message, 'расскажите, что вы знаете о курсе' )
 
 @bot.message_handler(commands=['reset'])
 def reset(message):
@@ -75,7 +77,8 @@ def help(message):
     info
     ''')
 
-
+# TODO добавить символ начала строки в шаблон, чтобы игнорировать 
+# символ / в середине текста
 @bot.message_handler(regexp="/.*")
 def wrong_command(message):
     bot.send_message(message.chat.id, ''' 
@@ -104,18 +107,22 @@ def process_user_input(message):
 
         elif (bt.bot_state == bt.EXAM_ST):
             proc_cmd_exam_st(message)
-            
+
+        elif (bt.bot_state == bt.CHOOSING_COURSE_ST):
+            exam_new(message)
+
     except BaseException as e:
         print(str(e))
         bt.bot_state = bt.DEFAULT_ST
-        bot.send_message(message.chat.id, 'something went wrong at get_user_text')
+        bot.send_message(message.chat.id, 'something went wrong at process_user_input')
 
 def proc_cmd_oper_st(message):
     cmd = message.text
     if cmd == bt.USER_COMMANDS['avatar']:
         avatar(message)
     elif cmd == bt.USER_COMMANDS['exam']:
-        exam(message)
+        #exam_new(message)
+        ask_for_course(message)
     else:
         msg = 'пожалуйста, выберите кнопку, или используйте команду /reset'
         bot.send_message(message.chat.id, msg)
@@ -132,6 +139,12 @@ def proc_cmd_exam_st(message):
     if not grade==text_processing.TOO_SHORT:
         text = 'Что хочешь делать дальше?'
         start_screen(message, text)
+
+def exam_new(message):
+    course = message.text
+    character.chosen_course = course
+    remove_buttons(message, 'расскажите, что вы знаете о курсе "' + course + "'" )
+    bt.bot_state = bt.EXAM_ST
 #-------------------------------------------------------------------------
 
 
@@ -160,5 +173,17 @@ def start_screen(message, text):
         markup.add(but_1, but_2)
 
         bot.send_message(message.chat.id, text, reply_markup=markup)
+
+def ask_for_course(message):
+    courses = character.get_courses()
+    buttons = []
+    for course in courses:
+        buttons.append(types.KeyboardButton(course))
+    
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=2)
+    for button in buttons:
+        markup.add(button)
+    bt.bot_state = bt.CHOOSING_COURSE_ST
+    bot.send_message(message.chat.id, 'Выберете курс', reply_markup=markup)
 
 bot.polling(non_stop = True) 
